@@ -3,10 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+    <style>
+        table{
+            border: 1px solid black;
+        }
+        td{
+            width: 50px;
+            height: 50px;
+            border: 1px solid black;
+        }
+        img{
+            width: 50px;
+            height: 50px;
+        }
+    </style>
 </head>
 <body>
+<table>
+    <tr>
+        <td class="cell"></td>
+        <td class="cell"></td>
+        <td class="cell"></td>
+    </tr>
+    <tr>
+        <td class="cell">4</td>
+        <td class="cell">5</td>
+        <td class="cell">6</td>
+    </tr>
+    <tr>
+        <td class="cell">7</td>
+        <td class="cell">8</td>
+        <td class="cell">9</td>
+    </tr>
+</table>
 <script>
- var mainTable = {}
+    var count = 0;
+ var mainTable = (function(){
+     function draw0(){//вставляет картинку и меняет очередь
+         console.log($('td'));
+     }
+     function drawX(){//вставляет картинку и меняет очередь
+         console.log($('td'));
+     }
+     function winner(){ //определяет победителя
+         //8 вариантов (3 совпадения классов)
+         var td = $('.cell');
+
+         console.log(td[5])
+     }
+
+     return{
+         draw_x:drawX,
+         draw_o:draw0,
+         draw_win:winner
+     }
+ })();
+    //цикломм по ячейкам и click
+    $('table').delegate('.cell','click',function(){
+//        console.log($(this).text());
+        if(count == 0){
+            console.log('x');
+            $(this).append("<img src='X.png'/>");
+            $(this).className = "X";
+//            mainTable.draw_x();
+            count = 1;
+        }else {
+            console.log('0');
+            $(this).append("<img src='0.png'/>");
+            $(this).className = "0";
+//            mainTable.draw_o();
+            count = 0;
+        }
+        mainTable.draw_win();
+    })
 </script>
 </body>
 </html>

@@ -4,22 +4,31 @@
     <meta charset="UTF-8">
     <title></title>
     <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+    <link href="bootstrap-3.3.2-dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         table{
-            border: 1px solid black;
+            border-collapse: collapse;
+            border: 4px solid white;
+            background: transparent;
         }
         td{
-            width: 50px;
-            height: 50px;
-            border: 1px solid black;
+            width: 100px;
+            height: 100px;
+            border: 3px solid maroon;
         }
-        img{
-            width: 50px;
-            height: 50px;
+        td img{
+            width: 90px;
+            height: 90px;
+        }
+        div{
+            height: 300px;
         }
     </style>
 </head>
 <body>
+<div class="row">
+<div class="col-md-4" id="firstPlayer"></div>
+<div class="col-md-4" id="game">
 <table>
     <tr>
         <td class="cell"></td>
@@ -27,56 +36,94 @@
         <td class="cell"></td>
     </tr>
     <tr>
-        <td class="cell">4</td>
-        <td class="cell">5</td>
-        <td class="cell">6</td>
+        <td class="cell"></td>
+        <td class="cell"></td>
+        <td class="cell"></td>
     </tr>
     <tr>
-        <td class="cell">7</td>
-        <td class="cell">8</td>
-        <td class="cell">9</td>
+        <td class="cell"></td>
+        <td class="cell"></td>
+        <td class="cell"></td>
     </tr>
 </table>
+</div>
+<div class="col-md-4" id="secondPlayer"></div>
+    </div>
 <script>
     var count = 0;
+    var pl1 =1 //prompt("Enter name for first player");
+    var pl2 = 2//prompt("Enter name for second player");
  var mainTable = (function(){
-     function draw0(){//вставляет картинку и меняет очередь
-         console.log($('td'));
+     var td = $('.cell');
+     function whoseTurn(){
+         if(count == 1){
+             $('#secondPlayer').css({'backgroundImage': 'url(Player2.png)',
+                 'background-size': 'cover'})
+                .append("<p style='color: forestgreen; font-size: 2em'>My turn!</p>");
+             $('#firstPlayer').css('backgroundImage', 'none')
+                     .children().remove();
+         }else if(count == 0){
+             $('#firstPlayer').css({'backgroundImage': 'url(Player1.png)',
+                         'background-size': 'cover'})
+                     .append("<p class='text-right' style='color: forestgreen; font-size: 2em'>My turn!</p>");
+             $('#secondPlayer').css('backgroundImage', 'none')
+                     .children().remove();
+         }
      }
-     function drawX(){//вставляет картинку и меняет очередь
-         console.log($('td'));
+     function winnerX(){
+         if((td[0].className=="cell X")&&(td[4].className=="cell X")&&(td[8].className=="cell X")
+                 ||(td[2].className == "cell X") && (td[4].className == "cell X") && (td[6].className == "cell X")
+                 ||(td[0].className == "cell X") && (td[3].className == "cell X") && (td[6].className == "cell X")
+                 ||(td[1].className == "cell X") && (td[4].className == "cell X") && (td[7].className == "cell X")
+                 ||(td[2].className == "cell X") && (td[5].className == "cell X") && (td[8].className == "cell X")
+                 ||(td[0].className == "cell X") && (td[1].className == "cell X") && (td[2].className == "cell X")
+                 ||(td[3].className == "cell X") && (td[4].className == "cell X") && (td[5].className == "cell X")
+                 ||(td[6].className == "cell X") && (td[7].className == "cell X") && (td[8].className == "cell X")
+         ){
+             $('#firstPlayer').children().text("I'm winner!");
+             alert('Winner '+ pl1);
+             $('body').undelegate('.cell','click');
+             $('#secondPlayer').hide();
+         }
      }
-     function winner(){ //определяет победителя
-         //8 вариантов (3 совпадения классов)
-         var td = $('.cell');
-
-         console.log(td[5])
+     function winner0() {
+         if ((td[0].className == "cell 0") && (td[4].className == "cell 0") && (td[8].className == "cell 0")
+                 ||(td[2].className == "cell 0") && (td[4].className == "cell 0") && (td[6].className == "cell 0")
+                 ||(td[0].className == "cell 0") && (td[3].className == "cell 0") && (td[6].className == "cell 0")
+                 ||(td[1].className == "cell 0") && (td[4].className == "cell 0") && (td[7].className == "cell 0")
+                 ||(td[2].className == "cell 0") && (td[5].className == "cell 0") && (td[8].className == "cell 0")
+                 ||(td[0].className == "cell 0") && (td[1].className == "cell 0") && (td[2].className == "cell 0")
+                 ||(td[3].className == "cell 0") && (td[4].className == "cell 0") && (td[5].className == "cell 0")
+                 ||(td[6].className == "cell 0") && (td[7].className == "cell 0") && (td[8].className == "cell 0")
+         ) {
+             $('#secondPlayer').children().text("I'm winner!");
+             alert('Winner '+ pl2);
+             $('body').undelegate('.cell','click');
+             $('#secondPlayer').hide();
+         }
      }
-
      return{
-         draw_x:drawX,
-         draw_o:draw0,
-         draw_win:winner
+         backgroundTurn:whoseTurn,
+         draw_winX:winnerX,
+         draw_win0:winner0
      }
  })();
-    //цикломм по ячейкам и click
-    $('table').delegate('.cell','click',function(){
-//        console.log($(this).text());
+    mainTable.backgroundTurn();
+    $('.cell').one('click',function(){
         if(count == 0){
-            console.log('x');
-            $(this).append("<img src='X.png'/>");
-            $(this).className = "X";
-//            mainTable.draw_x();
+            $(this).append("<img src='X.png'/>")
+            .addClass("X");
             count = 1;
+            mainTable.draw_winX();
         }else {
-            console.log('0');
-            $(this).append("<img src='0.png'/>");
-            $(this).className = "0";
-//            mainTable.draw_o();
+            $(this).append("<img src='0.png'/>")
+            .addClass("0");
             count = 0;
+            mainTable.draw_win0();
         }
-        mainTable.draw_win();
-    })
+        mainTable.backgroundTurn();
+    });
+
 </script>
 </body>
 </html>
